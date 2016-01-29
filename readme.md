@@ -17,12 +17,12 @@ WebSocket Login Customer demo
 ----------
 * [Подготовка среды демонстрации](#Подготовка-среды-демонстрации)
 * [Установка проекта](#Установка-проекта)
-* [Сборка и развертывание (build and deploy)](#Сборка-и-развертывание-(build-and-deploy))
+* [Сборка и развертывание (build and deploy)](#Сборка-и-развертывание-build-and-deploy)
 * [Проверка работоспособности](#Проверка-работоспособности)
-* [Выполнение Arquillian тестов](#Выполнение-Arquillian-тестов)
+* [Выполнение Arquillian тестов](#Выполнение-arquillian-тестов)
 * [История токенов пользователей](#История-токенов-пользователей)
-* [Database DDL](#Database-DDL)
-* [Полезные материалы](#полезные-материалы)
+* [Database DDL](#database-ddl)
+* [Полезные материалы](#Полезные-материалы)
   
 Подготовка среды демонстрации
 -----------------------------
@@ -35,11 +35,15 @@ WebSocket Login Customer demo
 Установка проекта
 -----------------
 * запустить сервер WildFly:
-> для Linux:  ```WILDFLY_HOME/bin/standalone.sh -c standalone.xml```
+
+> для Linux:  ```WILDFLY_HOME/bin/standalone.sh -c standalone.xml```   
 > для Windows:  ```WILDFLY_HOME\bin\standalone.bat -c standalone.xml```
+
 * в папке проекта _'websocket-server'_ выполнить скрипт конфигурации сервиса:
-> для Linux:  ```WILDFLY_HOME/bin/jboss-cli.bat --connect --file=configure-server.cli```
+
+> для Linux:  ```WILDFLY_HOME/bin/jboss-cli.bat --connect --file=configure-server.cli```   
 > для Windows:  ```WILDFLY_HOME\bin\jboss-cli.bat --connect --file=configure-server.cli```
+
 * убедиться что сервер БД MySQL запущен
 * в папке проекта _'websocket-server'_ выполнить команду для настройки таблиц БД: ```gradlew update```
 
@@ -158,7 +162,7 @@ CHARACTER SET utf8
 COLLATE utf8_general_ci;
 ```
 
-Полезные материалы   
+Полезные материалы
 -------------------
 http://www.mastertheboss.com/javaee/websockets/websockets-tutorial-on-wildfly-8?showall=&start=1   
 http://jlunaquiroga.blogspot.ru/2014/05/websockets-in-jee-7-with-wildfly.html   
