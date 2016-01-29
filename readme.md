@@ -29,7 +29,7 @@ WebSocket Login Customer demo
 * установить [Java SDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * установить [Wildfly](http://wildfly.org/downloads/) _(тестирование и отладка производилась на Wildfly v8.2.1.Final)_
 * установить сервер БД [MySQL](http://dev.mysql.com/downloads/mysql/) _(дальнейшие настройки соединения с БД предполагают работу сервера локально на порту 3306, 'localhost:3306')_
-* настроить переменные среды _**JAVA_HOME**_
+* настроить переменную среды _**JAVA_HOME**_
 * в папке проекта _'websocket-server'_ скорректировать значения в файле настроек _gradle.properties_: секции _"Wildlfly config"_ и _"Luqibase config"_
 
 Установка проекта
@@ -62,7 +62,8 @@ gradlew deployToWildfly
 Проверка работоспособности
 --------------------------
 
-* Успешный сценарий аутентификации пользователя _(Для тестов в БД внесен пользователь: email: fpi@bk.ru, password: 123123)_ 
+* Успешный сценарий аутентификации пользователя _(Для тестов в БД внесен пользователь: email: fpi@bk.ru, password: 123123)_
+
 > При повторной аутентификации, сервис обновляет время действия существующего, валидного токена. Если токен не валидный (когда его время истекло), создается новый токен.
 
 ```
@@ -72,6 +73,9 @@ gradlew deployToWildfly
 ![](docs/img/login_customer_page_2.png)
 
 * Не успешный сценарий аудентификации пользователя
+
+> Можно использовать любые email и password, которых нет в БД
+
 ```
 вводим email "123@gmail.com" и password "newPassword", нажимаем кнопку "login"
 ```
@@ -88,7 +92,7 @@ gradlew deployToWildfly
 
 Выполнение Arquillian тестов
 ----------------------------
-* **остановить сервер WildFly**, серве БД MySQL должен быть запущен
+* **остановить сервер WildFly**, сервер БД MySQL должен быть запущен
 * В папке проекта _'websocket-server'_ выполнить команду:
 ```
 gradlew testWebsocket
