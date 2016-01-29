@@ -1,0 +1,12 @@
+batch
+
+xa-data-source remove --name=WebSocketServerDS
+/subsystem=datasources/jdbc-driver=mysql:remove
+
+/subsystem=logging/logger=ru.abogatyrev:remove
+
+run-batch
+
+:reload
+
+module remove --name=com.mysql

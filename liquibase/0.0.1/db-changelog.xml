@@ -1,0 +1,95 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+        logicalFilePath="websocket-server/0.0.1/db-changelog.xml">
+    <preConditions>
+        <dbms type="mysql"/>
+    </preConditions>
+
+    <changeSet author="avb" id="1">
+        <createTable tableName="Customer">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createIndex indexName="customerEmailIDX" tableName="Customer" unique="true">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="avb" id="2">
+        <comment>Добавляем тестового клиента</comment>
+        <insert tableName="Customer">
+            <column name="email" type="varchar(255)">
+                fpi@bk.ru
+            </column>
+            <column name="password" type="varchar(255)">
+                123123
+            </column>
+        </insert>
+    </changeSet>
+
+    <changeSet author="avb" id="3">
+        <createTable tableName="ApiToken">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="customerId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiration" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+
+        <createIndex tableName="ApiToken" indexName="apiTokenIDX" unique="true">
+            <column name="token"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet author="avb" id="4">
+        <addForeignKeyConstraint baseColumnNames="customerId" baseTableName="ApiToken"
+                                 referencedColumnNames="id" referencedTableName="Customer"
+                                 constraintName="ApiTokenCustomerFK"/>
+    </changeSet>
+
+    <changeSet author="avb" id="5">
+        <comment>Служебная таблица Envers</comment>
+        <createTable tableName="REVINFO">
+            <column name="REV" type="INTEGER" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="REVTSTMP" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="avb" id="6">
+        <comment>Таблица для хранения истории изменений токенов пользователей</comment>
+        <createTable tableName="ApiToken_AUD">
+            <column name="REV" type="INTEGER"/>
+            <column name="REVTYPE" type="TINYINT"/>
+
+            <column name="id" type="BIGINT"/>
+            <column name="customerId" type="BIGINT"/>
+            <column name="token" type="VARCHAR(255)"/>
+            <column name="expiration" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

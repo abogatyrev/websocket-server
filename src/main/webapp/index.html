@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Login</title>
+</head>
+<body>
+<script language="javascript" type="text/javascript">
+    var wsUri = getRootUri() + "/websocket/login";
+
+    function getRootUri() {
+        return "ws://" + (document.location.hostname == "" ? "localhost" : document.location.hostname) + ":" +
+                (document.location.port == "" ? "8080" : document.location.port);
+    }
+
+    function init() {
+        output = document.getElementById("output");
+    }
+
+    function send_message() {
+
+        websocket = new WebSocket(wsUri);
+        websocket.onopen = function (evt) {
+            onOpen(evt)
+        };
+        websocket.onmessage = function (evt) {
+            onMessage(evt)
+        };
+        websocket.onerror = function (evt) {
+            onError(evt)
+        };
+
+    }
+
+    function onOpen(evt) {
+        writeToScreen("Connected to Endpoint!");
+        doSend(email.value, password.value);
+
+    }
+
+    function onMessage(evt) {
+        writeToScreen("Message Received: " + evt.data);
+    }
+
+    function onError(evt) {
+        writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+    }
+
+    function doSend(email, password) {
+        uuid = UUID();
+        message = '{"type":"LOGIN_CUSTOMER","sequence_id":"' + uuid +
+                '","data":{"email":"' + email +
+                '","password":"' + password + '"}}';
+        writeToScreen("Message Sent: " + message);
+        websocket.send(message);
+    }
+
+    function writeToScreen(message) {
+        var pre = document.createElement("p");
+        pre.style.wordWrap = "break-word";
+        pre.innerHTML = message;
+
+        output.appendChild(pre);
+    }
+
+    function S4() {
+        return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    }
+
+    function UUID() {
+        return (S4() + S4() + "-" + S4() + "-4" + S4().substr(0,3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+    }
+
+    window.addEventListener("load", init, false);
+
+</script>
+
+<h1 style="text-align: center;">Customer Login</h1>
+
+    <br>
+
+    <div style="text-align: center;">
+        <form action="">
+            <input id="email" name="email" placeholder="email" type="text">
+            <input id="password" name="password" placeholder="password" type="password">
+            <br>
+            <input onclick="send_message()" value="login" type="button">
+        </form>
+    </div>
+    <div id="output"></div>
+</body>
+</html>

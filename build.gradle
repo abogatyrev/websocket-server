@@ -1,0 +1,81 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+        //mavenCentral()
+    }
+
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
+        classpath "com.netflix.nebula:gradle-extra-configurations-plugin:${gradleExtraConfigurationsPluginVersion}"
+
+        classpath "mysql:mysql-connector-java:${mySqlConnectorVersion}"
+        classpath "org.liquibase:liquibase-gradle-plugin:${liquibaseGradlePluginVersion}"
+    }
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+    //mavenCentral()
+}
+
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'nebula.provided-base'
+apply plugin: 'org.liquibase.gradle'
+apply plugin: 'java'
+apply plugin: 'war'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.jboss.spec:jboss-javaee-7.0:${jbossJavaee70Version}"
+        mavenBom "org.jboss.arquillian:arquillian-bom:${arquillianBomVersion}"
+    }
+}
+
+liquibase {
+    activities {
+        main {
+            changeLogFile "${this.rootDir}/liquibase/project-changelogs.xml"
+            url "${dbUrl}"
+            username "${dbUsername}"
+            password "${dbPassword}"
+            //logLevel "debug"
+        }
+    }
+}
+
+dependencies {
+    compile("mysql:mysql-connector-java:${mySqlConnectorVersion}")
+
+    provided("javax:javaee-api:7.0")
+
+    provided("com.fasterxml.jackson.core:jackson-databind:${jacksonCoreVersion}")
+    provided("com.fasterxml.jackson.core:jackson-annotations:${jacksonCoreVersion}")
+
+    provided('org.hibernate.javax.persistence:hibernate-jpa-2.1-api')
+    provided("org.hibernate:hibernate-envers:${hibernateEnversVersion}")
+
+    provided("org.jboss.logging:jboss-logging:${jbossLoggingVersion}")
+    provided("org.jboss.logging:jboss-logging-annotations:${jbossLoggingAnnotationsVersion}")
+    provided("org.jboss.logging:jboss-logging-processor:${jbossLoggingProcessorVersion}")
+
+    testCompile('io.undertow:undertow-websockets-jsr:1.3.14.Final')
+    testCompile("junit:junit:${junitVersion}")
+    testCompile('org.jboss.arquillian.junit:arquillian-junit-container')
+
+    testCompile('org.wildfly.arquillian:wildfly-arquillian-container-managed:1.0.2.Final') {
+        exclude group: 'sun.jdk', module: 'jconsole'
+    }
+
+}
+
+task testWebsocket(type: Test, dependsOn: update) {
+    environment ('JBOSS_HOME', "${jbossHome}")
+}
+
+task deployToWildfly(type: Copy, dependsOn: war) {
+    from war.archivePath
+    into "${jbossHome}/standalone/deployments"
+    include "*.war"
+}
