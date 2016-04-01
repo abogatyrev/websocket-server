@@ -5,6 +5,7 @@ WebSocket Login Customer demo
   
   Используются следующие инструменты и технологии:
   
+   * EJB
    * [WildFly Application server](http://wildfly.org/)
    * [MySQL database](http://dev.mysql.com/)
    * сборка с помощью [Gradle](http://gradle.org/)
